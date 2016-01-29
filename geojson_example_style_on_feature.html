@@ -1,0 +1,73 @@
+<html>
+<head>
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/>
+<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="leaflet-providers.js"></script>
+</head>
+<body>
+<div id="map" style="width: 100%; height: 600px;"></div>
+<script type="text/javascript">
+var map = L.map('map');
+var terrainTiles = L.tileLayer.provider('OpenTopoMap');
+terrainTiles.addTo(map);
+map.setView([35.9908385, -78.9005222], 3);
+
+
+
+//return color based on value
+function getValue(x) {
+	return x == "Stream" ? "#800026" :
+	       x == "Well" ? "#FEB24C" :
+	       x == "Land" ? "#E31A1C" :
+	       x == "Estuary" ? "#FC4E2A" :
+	       x == "Facility" ? "#FD8D3C" :
+	       x == "Glacier"? "#BD0026" :
+	       x == "Lake, Reservoir, Impoundment" ? "#FED976" :
+		       "#FFEDA0";
+}
+
+// style function 
+function style(feature) {
+	return {
+		"color": getValue(feature.properties.type),
+		"stroke": false,
+		opacity: 1
+	};
+}
+
+
+
+
+
+function onEachFeature(feature, layer) {
+            var popupText = "Organization Name: " + feature.properties.orgName
+                + "<br>Station Name: " + feature.properties.locName
+                + "<br>Station ID: " + feature.properties.name
+                + "<br>Station Type: " + feature.properties.type;
+            layer.bindPopup(popupText);
+            }
+
+function addDataToMap(data, map) {
+    var dataLayer = L.geoJson(data, {
+        onEachFeature: onEachFeature,
+        pointToLayer: function (feature, latlng) {
+        return L.circleMarker(latlng, {
+                    radius: 5,
+                    fillColor: getValue(feature.properties.type),
+                    color: "#000",
+                    weight: 1,
+                    opacity: 1,
+                    fillOpacity: 0.7
+                });
+        }
+        });
+    dataLayer.addTo(map);
+    map.fitBounds(L.geoJson(data).getBounds());
+}
+
+
+$.getJSON("http://wqp-test.er.usgs.gov/ogcservices/wms?service=WFS&request=GetFeature&version=1.0.0&typeName=wqp_sites&SearchParams=siteType%3AStream%7CWell%3Bhuc%3A0504*%3BcharacteristicType%3ANutrient%3Bsorted%3Ano&styles=&outputFormat=application/json", function(data) { addDataToMap(data, map); });
+</script>
+</body>
+</html>
