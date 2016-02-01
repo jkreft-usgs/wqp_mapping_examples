@@ -42,7 +42,7 @@ function addDataToMap(data, map) {
 }
 
 
-$.getJSON("http://wqp-test.er.usgs.gov/ogcservices/wms?service=WFS&request=GetFeature&version=1.0.0&typeName=wqp_sites&SearchParams=siteType%3AStream%7CWell%3Bhuc%3A0504*%3BcharacteristicType%3ANutrient%3Bsorted%3Ano&styles=&outputFormat=application/json", function(data) { addDataToMap(data, map); });
+$.getJSON("http://www.waterqualitydata.us/ogcservices/wms?service=WFS&request=GetFeature&version=1.0.0&typeName=wqp_sites&SearchParams=siteType%3AStream%7CWell%3Bhuc%3A0504*%3BcharacteristicType%3ANutrient%3Bsorted%3Ano&styles=&outputFormat=application/json", function(data) { addDataToMap(data, map); });
 </script>
 </body>
 </html>
